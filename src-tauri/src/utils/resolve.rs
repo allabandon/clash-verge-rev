@@ -7,7 +7,7 @@ use once_cell::sync::OnceCell;
 use serde_yaml::Mapping;
 use std::net::TcpListener;
 use tauri::{App, AppHandle, Manager};
-#[cfg(not(target_os = "linux"))]
+//#[cfg(not(target_os = "linux"))]
 // use window_shadows::set_shadow;
 use tauri_plugin_notification::NotificationExt;
 

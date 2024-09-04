@@ -11,7 +11,6 @@ mod feat;
 mod utils;
 
 use crate::utils::{init, resolve, server};
-use tauri::tray::TrayIconBuilder;
 
 fn main() -> std::io::Result<()> {
     // 单例检测
@@ -32,6 +31,9 @@ fn main() -> std::io::Result<()> {
 
     crate::log_err!(init::init_config());
 
+    #[cfg(debug_assertions)]
+    let devtools = tauri_plugin_devtools::init();
+
     #[allow(unused_mut)]
     let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
@@ -43,8 +45,6 @@ fn main() -> std::io::Result<()> {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .setup(|app| {
-            TrayIconBuilder::new().build(app)?;
-
             #[cfg(target_os = "macos")]
             {
                 use tauri::menu::MenuBuilder;
@@ -119,6 +119,11 @@ fn main() -> std::io::Result<()> {
             // clash api
             cmds::clash_api_get_proxy_delay
         ]);
+
+    #[cfg(debug_assertions)]
+    {
+        builder = builder.plugin(devtools);
+    }
 
     let app = builder
         .build(tauri::generate_context!())
