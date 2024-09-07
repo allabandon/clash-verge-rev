@@ -29,8 +29,6 @@ fn main() -> std::io::Result<()> {
     #[cfg(target_os = "linux")]
     std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
 
-    crate::log_err!(init::init_config());
-
     #[cfg(debug_assertions)]
     let devtools = tauri_plugin_devtools::init();
 
@@ -62,6 +60,7 @@ fn main() -> std::io::Result<()> {
             tauri::async_runtime::block_on(async move {
                 resolve::resolve_setup(app).await;
             });
+            crate::log_err!(init::init_config());
 
             Ok(())
         })
