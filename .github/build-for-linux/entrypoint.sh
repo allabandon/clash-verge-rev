@@ -15,10 +15,10 @@ if [ "$INPUT_TARGET" = "x86_64-unknown-linux-gnu" ]; then
 elif [ "$INPUT_TARGET" = "aarch64-unknown-linux-gnu" ]; then
     dpkg --add-architecture arm64
     apt-get update
-    # apt-get install -y build-essential:arm64 curl:arm64 wget:arm64 file:arm64 libxdo-dev:arm64 libssl-dev:arm64 libayatana-appindicator3-dev:arm64 librsvg2-dev:arm64 libgtk-3-dev:arm64
-    # export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
-    # export CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
-    # export CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
+    apt-get install -y libsoup-3.0-dev:arm64 libxdo-dev:arm64 libssl-dev:arm64 libayatana-appindicator3-dev:arm64 librsvg2-dev:arm64 libgtk-3-dev:arm64 libjavascriptcoregtk-4.1-dev:arm64
+    export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
+    export CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc
+    export CXX_aarch64_unknown_linux_gnu=aarch64-linux-gnu-g++
     export PKG_CONFIG_PATH=/usr/lib/aarch64-linux-gnu/pkgconfig
     export PKG_CONFIG_ALLOW_CROSS=1
 elif [ "$INPUT_TARGET" = "armv7-unknown-linux-gnueabihf" ]; then
