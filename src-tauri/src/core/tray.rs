@@ -8,7 +8,7 @@ use crate::{
     },
 };
 use anyhow::Result;
-use tauri::tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent};
+use tauri::tray::{TrayIcon, TrayIconBuilder};
 use tauri::{
     menu::{MenuEvent, MenuItem, PredefinedMenuItem, Submenu},
     Wry,
@@ -19,26 +19,7 @@ pub struct Tray {}
 impl Tray {
     pub fn update_systray(app_handle: &AppHandle) -> Result<()> {
         TrayIconBuilder::with_id("main")
-            .menu(&create_tray_menu(app_handle, None, false, false)?)
             .on_menu_event(on_menu_event)
-            .on_tray_icon_event(|tray, event| {
-                let tray_event = { Config::verge().latest().tray_event.clone() };
-                let tray_event: String = tray_event.unwrap_or("main_window".into());
-                if let TrayIconEvent::Click {
-                    button: MouseButton::Left,
-                    button_state: MouseButtonState::Up,
-                    ..
-                } = event
-                {
-                    let app = tray.app_handle();
-                    match tray_event.as_str() {
-                        "system_proxy" => feat::toggle_system_proxy(),
-                        "tun_mode" => feat::toggle_tun_mode(),
-                        "main_window" => resolve::create_window(app),
-                        _ => {}
-                    }
-                }
-            })
             .build(app_handle)?;
         Ok(())
     }
@@ -72,6 +53,7 @@ impl Tray {
             *system_proxy,
             *tun_mode,
         )?));
+        // tray.on_menu_event(on_menu_event);
 
         #[cfg(target_os = "macos")]
         match tray_icon.as_str() {

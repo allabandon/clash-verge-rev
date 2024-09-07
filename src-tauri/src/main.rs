@@ -11,7 +11,6 @@ mod feat;
 mod utils;
 
 use crate::utils::{init, resolve, server};
-
 fn main() -> std::io::Result<()> {
     // 单例检测
     let app_exists: bool = tauri::async_runtime::block_on(async move {
@@ -43,25 +42,10 @@ fn main() -> std::io::Result<()> {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .setup(|app| {
-            #[cfg(target_os = "macos")]
-            {
-                use tauri::menu::MenuBuilder;
-                let _ = MenuBuilder::new(app)
-                    .copy()
-                    .paste()
-                    .undo()
-                    .redo()
-                    .cut()
-                    .select_all()
-                    .quit()
-                    .close_window()
-                    .build();
-            }
             tauri::async_runtime::block_on(async move {
                 resolve::resolve_setup(app).await;
             });
             crate::log_err!(init::init_config());
-
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
