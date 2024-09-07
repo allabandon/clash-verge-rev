@@ -43,7 +43,7 @@
         "scope": ["$APPDATA/**", "$RESOURCE/../**", "**"],
         "enable": true
       },
-      "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: asset: 'unsafe-eval' 'unsafe-inline' 'self';; connect-src ipc: http://ipc.localhost"
+      "csp": "default-src blob: data: filesystem: ws: wss: http: https: 'unsafe-eval' 'unsafe-inline'; connect-src 'self' ws://127.0.0.1:9097 ipc: http://ipc.localhost;"
     },
     "windows": []
   }
