@@ -18,7 +18,7 @@ pub struct Tray {}
 
 impl Tray {
     pub fn update_systray(app_handle: &AppHandle) -> Result<()> {
-        TrayIconBuilder::with_id("verge_tray")
+        TrayIconBuilder::with_id("main")
             .menu(&create_tray_menu(app_handle, None, false, false)?)
             .on_menu_event(on_menu_event)
             .on_tray_icon_event(|tray, event| {
@@ -64,7 +64,7 @@ impl Tray {
         let common_tray_icon = verge.common_tray_icon.as_ref().unwrap_or(&false);
         let sysproxy_tray_icon = verge.sysproxy_tray_icon.as_ref().unwrap_or(&false);
         let tun_tray_icon = verge.tun_tray_icon.as_ref().unwrap_or(&false);
-        let tray: TrayIcon = app_handle.tray_by_id("verge_tray").unwrap();
+        let tray: TrayIcon = app_handle.tray_by_id("main").unwrap();
 
         let _ = tray.set_menu(Some(create_tray_menu(
             app_handle,
