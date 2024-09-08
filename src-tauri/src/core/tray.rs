@@ -8,7 +8,7 @@ use crate::{
     },
 };
 use anyhow::Result;
-use tauri::tray::{TrayIcon, TrayIconBuilder};
+use tauri::tray::{MouseButton, MouseButtonState, TrayIconEvent};
 use tauri::{
     menu::{MenuEvent, MenuItem, PredefinedMenuItem, Submenu},
     Wry,
@@ -18,9 +18,27 @@ pub struct Tray {}
 
 impl Tray {
     pub fn update_systray(app_handle: &AppHandle) -> Result<()> {
-        TrayIconBuilder::with_id("main")
-            .on_menu_event(on_menu_event)
-            .build(app_handle)?;
+        let tray = app_handle.tray_by_id("main").unwrap();
+        tray.on_tray_icon_event(|tray, event| {
+            let tray_event = { Config::verge().latest().tray_event.clone() };
+            let tray_event: String = tray_event.unwrap_or("main_window".into());
+            if let TrayIconEvent::Click {
+                button: MouseButton::Left,
+                button_state: MouseButtonState::Up,
+                ..
+            } = event
+            {
+                let app = tray.app_handle();
+                match tray_event.as_str() {
+                    "system_proxy" => feat::toggle_system_proxy(),
+                    "tun_mode" => feat::toggle_tun_mode(),
+                    "main_window" => resolve::create_window(app),
+                    _ => {}
+                }
+            }
+        });
+        tray.on_menu_event(on_menu_event);
+
         Ok(())
     }
 
@@ -45,7 +63,7 @@ impl Tray {
         let common_tray_icon = verge.common_tray_icon.as_ref().unwrap_or(&false);
         let sysproxy_tray_icon = verge.sysproxy_tray_icon.as_ref().unwrap_or(&false);
         let tun_tray_icon = verge.tun_tray_icon.as_ref().unwrap_or(&false);
-        let tray: TrayIcon = app_handle.tray_by_id("main").unwrap();
+        let tray = app_handle.tray_by_id("main").unwrap();
 
         let _ = tray.set_menu(Some(create_tray_menu(
             app_handle,
@@ -53,8 +71,8 @@ impl Tray {
             *system_proxy,
             *tun_mode,
         )?));
-        // tray.on_menu_event(on_menu_event);
 
+        // let _ = tray.
         #[cfg(target_os = "macos")]
         match tray_icon.as_str() {
             "monochrome" => {
