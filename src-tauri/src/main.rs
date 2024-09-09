@@ -44,8 +44,8 @@ fn main() -> std::io::Result<()> {
         .setup(|app| {
             tauri::async_runtime::block_on(async move {
                 resolve::resolve_setup(app).await;
+                crate::log_err!(init::init_config());
             });
-            crate::log_err!(init::init_config());
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
