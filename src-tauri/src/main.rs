@@ -10,7 +10,8 @@ mod enhance;
 mod feat;
 mod utils;
 
-use crate::utils::{init, resolve, server};
+use crate::utils::{resolve, server};
+
 fn main() -> std::io::Result<()> {
     // 单例检测
     let app_exists: bool = tauri::async_runtime::block_on(async move {
@@ -44,7 +45,6 @@ fn main() -> std::io::Result<()> {
         .setup(|app| {
             tauri::async_runtime::block_on(async move {
                 resolve::resolve_setup(app).await;
-                crate::log_err!(init::init_config());
             });
             Ok(())
         })

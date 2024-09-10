@@ -37,7 +37,7 @@ pub async fn resolve_setup(app: &mut App) {
     let version = app.package_info().version.to_string();
     handle::Handle::global().init(app.app_handle());
     VERSION.get_or_init(|| version.clone());
-
+    log_err!(init::init_config());
     log_err!(init::init_resources());
     log_err!(init::init_scheme());
     log_err!(init::startup_script(app.app_handle()).await);
